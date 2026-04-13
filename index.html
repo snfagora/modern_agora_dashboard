@@ -1,0 +1,1621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapping the Modern Agora — SNF Agora Institute, Johns Hopkins</title>
+<meta name="description" content="A county-level map of America's civic infrastructure. From the Mapping the Modern Agora project at the SNF Agora Institute at Johns Hopkins University.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   Mapping the Modern Agora — single-page site
+   Type:  Fraunces (display) + IBM Plex Sans (body) + Plex Mono
+   Color: Hopkins-inspired navy + heritage gold + warm cream
+   =========================================================== */
+
+:root {
+  --navy:        #0a2540;
+  --navy-deep:   #061a30;
+  --navy-soft:   #1a3a5f;
+  --gold:        #c9a24a;
+  --gold-bright: #e5b75c;
+  --gold-deep:   #8a6b1f;
+  --cream:       #f7f4ee;
+  --cream-deep:  #efe9dc;
+  --paper:       #fbfaf6;
+  --ink:         #14181f;
+  --ink-soft:    #4a5260;
+  --ink-faint:   #8b8f99;
+  --rule:        #d8d2c2;
+  --hairline:    rgba(10,37,64,0.12);
+
+  /* Sequential ramp for civic opportunity index (1=low → 5=high) */
+  --q1: #f0e7d3;
+  --q2: #e3c98a;
+  --q3: #d2a44c;
+  --q4: #a87520;
+  --q5: #5a3a08;
+
+  --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --body:    "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:    "IBM Plex Mono", "SF Mono", Menlo, monospace;
+
+  --maxw: 1240px;
+  --gutter: clamp(20px, 4vw, 56px);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, svg { max-width: 100%; display: block; }
+a { color: var(--navy); text-decoration: none; border-bottom: 1px solid var(--gold); transition: color .15s, border-color .15s; }
+a:hover { color: var(--gold-deep); border-bottom-color: var(--gold-deep); }
+
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 500; letter-spacing: -0.01em; color: var(--ink); margin: 0; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.wide {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ============ TOP NAV ============ */
+.topnav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,37,64,0.97);
+  backdrop-filter: saturate(140%) blur(8px);
+  border-bottom: 1px solid rgba(201,162,74,0.25);
+}
+.topnav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.brand {
+  display: flex; align-items: center; gap: 14px;
+  color: var(--cream); border: none;
+  font-family: var(--display);
+  font-size: 17px; font-weight: 500;
+  letter-spacing: 0.005em;
+}
+.brand:hover { color: var(--gold-bright); }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute; inset: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.brand-sub {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(247,244,238,0.6);
+  margin-top: 1px;
+}
+.navlinks {
+  display: flex; gap: 30px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.navlinks a {
+  color: rgba(247,244,238,0.78);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 4px;
+}
+.navlinks a:hover { color: var(--gold-bright); border-bottom-color: var(--gold); }
+@media (max-width: 760px) {
+  .navlinks { display: none; }
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  background: var(--navy);
+  color: var(--cream);
+  overflow: hidden;
+  padding: clamp(80px, 14vh, 160px) 0 clamp(60px, 10vh, 120px);
+  isolation: isolate;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 80% 0%, rgba(201,162,74,0.18), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(201,162,74,0.08), transparent 70%);
+  pointer-events: none;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,162,74,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,162,74,0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: -1px -1px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+.hero-inner {
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 32px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before {
+  content: ""; width: 36px; height: 1px; background: var(--gold);
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(46px, 8vw, 112px);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  color: var(--cream);
+  max-width: 16ch;
+  margin-bottom: 36px;
+  font-variation-settings: "opsz" 144;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold-bright);
+  font-variation-settings: "opsz" 144;
+  font-weight: 300;
+}
+.hero-lede {
+  max-width: 58ch;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.55;
+  color: rgba(247,244,238,0.85);
+  font-weight: 300;
+}
+.hero-lede strong { color: var(--cream); font-weight: 500; }
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 32px;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(201,162,74,0.3);
+  max-width: 760px;
+}
+.hero-meta-item .num {
+  font-family: var(--display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 400;
+  color: var(--gold-bright);
+  line-height: 1;
+  display: block;
+  font-variation-settings: "opsz" 144;
+}
+.hero-meta-item .lab {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(247,244,238,0.65);
+  margin-top: 8px;
+  display: block;
+  max-width: 18ch;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 24px; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(247,244,238,0.5);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.scroll-cue::after {
+  content: ""; width: 1px; height: 32px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ============ SECTION SCAFFOLD ============ */
+section { padding: clamp(80px, 12vh, 140px) 0; position: relative; }
+section.alt { background: var(--cream); }
+section.dark { background: var(--navy); color: var(--cream); }
+section.dark h2, section.dark h3 { color: var(--cream); }
+section.dark .eyebrow { color: var(--gold-bright); }
+section.dark .eyebrow::before { background: var(--gold); }
+
+.section-head {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 40px;
+  margin-bottom: 64px;
+  align-items: end;
+}
+.section-head h2 {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+}
+.section-head h2 em { font-style: italic; color: var(--gold-deep); font-weight: 300; }
+section.dark .section-head h2 em { color: var(--gold-bright); }
+.section-head .eyebrow { margin-bottom: 24px; display: flex; }
+.section-head p {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 60ch;
+}
+section.dark .section-head p { color: rgba(247,244,238,0.75); }
+@media (max-width: 760px) {
+  .section-head { grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px; }
+}
+
+/* ============ ABOUT SECTION ============ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+@media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } }
+.about-prose p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0 0 22px;
+  max-width: 60ch;
+}
+.about-prose p.lede {
+  font-family: var(--display);
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.4;
+  color: var(--ink);
+  font-weight: 400;
+  margin-bottom: 36px;
+  font-variation-settings: "opsz" 144;
+}
+.about-prose p.lede::first-letter {
+  font-size: 4.5em;
+  float: left;
+  line-height: 0.85;
+  padding: 4px 12px 0 0;
+  font-weight: 400;
+  color: var(--gold-deep);
+  font-style: italic;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 2px solid var(--ink);
+  border-left: 1px solid var(--rule);
+}
+.stat {
+  padding: 28px 24px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.stat .num {
+  font-family: var(--display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+  display: block;
+}
+.stat .num em { font-style: italic; color: var(--gold-deep); font-weight: 300; }
+.stat .lab {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 12px;
+  display: block;
+  line-height: 1.4;
+}
+
+/* ============ MAP SECTION ============ */
+.map-section { padding-top: 80px; padding-bottom: 100px; background: var(--cream); }
+.map-section .section-head { margin-bottom: 40px; }
+.map-shell {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(10,37,64,0.04), 0 24px 60px -30px rgba(10,37,64,0.18);
+  overflow: hidden;
+}
+.map-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 20px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--hairline);
+  background: linear-gradient(to bottom, #fbfaf6, #f5f1e6);
+}
+.layer-toggle {
+  display: inline-flex;
+  border: 1px solid var(--navy);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.layer-toggle button {
+  appearance: none;
+  background: var(--paper);
+  border: none;
+  padding: 9px 16px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy);
+  cursor: pointer;
+  border-right: 1px solid var(--navy);
+  transition: background .15s, color .15s;
+}
+.layer-toggle button:last-child { border-right: none; }
+.layer-toggle button.active {
+  background: var(--navy);
+  color: var(--cream);
+}
+.layer-toggle button:hover:not(.active) { background: var(--cream-deep); }
+.map-hint {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: flex; align-items: center; gap: 10px;
+}
+.map-hint::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(201,162,74,0.2);
+}
+
+.map-canvas-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--paper);
+}
+#map-svg { width: 100%; height: 100%; display: block; }
+#map-svg path.county {
+  stroke: rgba(10,37,64,0.22);
+  stroke-width: 0.3px;
+  cursor: pointer;
+  transition: stroke 0.1s;
+}
+#map-svg path.county:hover {
+  stroke: var(--navy);
+  stroke-width: 1.2px;
+}
+#map-svg path.county.selected {
+  stroke: var(--navy);
+  stroke-width: 1.6px;
+}
+#map-svg path.state {
+  fill: none;
+  stroke: rgba(10,37,64,0.55);
+  stroke-width: 0.7px;
+  pointer-events: none;
+}
+#map-svg path.nation {
+  fill: none;
+  stroke: var(--navy);
+  stroke-width: 1px;
+  pointer-events: none;
+}
+.map-loading {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+.map-loading.hidden { display: none; }
+.map-loading::before {
+  content: ""; width: 12px; height: 12px;
+  border: 1.5px solid var(--gold);
+  border-top-color: transparent;
+  border-radius: 50%;
+  margin-right: 12px;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Map legend */
+.map-legend {
+  position: absolute;
+  bottom: 20px; left: 24px;
+  background: rgba(251,250,246,0.96);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--hairline);
+  padding: 14px 16px;
+  max-width: 320px;
+}
+.map-legend h4 {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin: 0 0 10px;
+}
+.legend-bar {
+  display: flex;
+  height: 12px;
+  border: 1px solid var(--hairline);
+}
+.legend-bar div { flex: 1; }
+.legend-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+.legend-categorical {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 14px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink);
+}
+.legend-categorical div {
+  display: flex; align-items: center; gap: 6px;
+}
+.legend-categorical span {
+  width: 10px; height: 10px; border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Tooltip */
+.map-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--navy-deep);
+  color: var(--cream);
+  padding: 10px 14px;
+  font-family: var(--body);
+  font-size: 12.5px;
+  border: 1px solid var(--gold);
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.1s;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.map-tooltip.visible { opacity: 1; }
+.map-tooltip .tt-name {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+.map-tooltip .tt-stat {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(440px, 100vw);
+  height: 100vh;
+  background: var(--paper);
+  border-left: 1px solid var(--hairline);
+  box-shadow: -16px 0 40px -20px rgba(10,37,64,0.25);
+  z-index: 200;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0.3, 1);
+  padding: 0;
+}
+.sidebar.open { transform: translateX(0); }
+.sidebar-head {
+  position: sticky; top: 0;
+  background: var(--navy);
+  color: var(--cream);
+  padding: 24px 28px 22px;
+  z-index: 1;
+  border-bottom: 1px solid var(--gold);
+}
+.sidebar-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 32px; height: 32px;
+  background: transparent;
+  border: 1px solid rgba(247,244,238,0.3);
+  color: var(--cream);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.sidebar-close:hover { background: rgba(201,162,74,0.2); border-color: var(--gold); }
+.sb-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 8px;
+}
+.sb-name {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--cream);
+  font-variation-settings: "opsz" 144;
+}
+.sb-state {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(247,244,238,0.65);
+  margin-top: 6px;
+}
+.sidebar-body { padding: 28px; }
+.sb-score-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: center;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.sb-score-num {
+  font-family: var(--display);
+  font-size: 56px;
+  font-weight: 400;
+  color: var(--navy);
+  line-height: 0.9;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.02em;
+}
+.sb-score-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.sb-quintile-pips {
+  display: flex; gap: 4px; margin-top: 8px;
+}
+.sb-quintile-pips div {
+  flex: 1; height: 8px;
+  background: var(--cream-deep);
+}
+.sb-quintile-pips div.on { background: var(--gold-deep); }
+.sb-rank {
+  font-family: var(--body);
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.sb-rank strong { color: var(--navy); font-weight: 600; font-family: var(--mono); font-size: 12px; }
+
+.sb-section-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin: 28px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.sb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+.sb-stat .l {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: block;
+}
+.sb-stat .v {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  font-variation-settings: "opsz" 36;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+.sb-stat .vsub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-left: 6px;
+}
+
+.sb-bars { display: flex; flex-direction: column; gap: 8px; }
+.sb-bar {
+  display: grid;
+  grid-template-columns: 110px 1fr 36px;
+  gap: 10px;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+}
+.sb-bar .lab { color: var(--ink); }
+.sb-bar .track {
+  height: 10px;
+  background: var(--cream-deep);
+  position: relative;
+}
+.sb-bar .fill {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  background: var(--navy);
+}
+.sb-bar.primary .fill { background: var(--gold-deep); }
+.sb-bar .num { color: var(--ink-soft); text-align: right; }
+
+/* ============ STORIES SECTION ============ */
+.stories-section { background: var(--paper); }
+.story {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  padding: 90px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+.story:last-child { border-bottom: none; padding-bottom: 40px; }
+@media (max-width: 900px) { .story { grid-template-columns: 1fr; gap: 40px; padding: 60px 0; } }
+.story-prose .chap {
+  font-family: var(--display);
+  font-size: clamp(80px, 10vw, 140px);
+  line-height: 0.85;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 144;
+  display: block;
+  margin-bottom: 12px;
+}
+.story-prose .chap-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 24px;
+  display: block;
+}
+.story-prose h3 {
+  font-family: var(--display);
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  margin-bottom: 22px;
+  font-variation-settings: "opsz" 144;
+  max-width: 16ch;
+}
+.story-prose h3 em { font-style: italic; color: var(--gold-deep); font-weight: 300; }
+.story-prose p {
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+  max-width: 50ch;
+}
+.story-viz {
+  background: var(--cream);
+  padding: 40px 36px;
+  border: 1px solid var(--hairline);
+  position: relative;
+  min-height: 380px;
+}
+.viz-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+.viz-sub {
+  font-family: var(--display);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0 0 22px;
+  font-variation-settings: "opsz" 14;
+}
+
+/* U-curve chart */
+.ucurve { display: flex; align-items: flex-end; gap: 12px; height: 240px; padding-top: 20px; }
+.ucurve .bar {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative;
+  height: 100%;
+}
+.ucurve .bar .col {
+  width: 100%;
+  background: var(--navy);
+  position: relative;
+  transition: background .2s;
+}
+.ucurve .bar:nth-child(1) .col,
+.ucurve .bar:nth-child(5) .col { background: var(--gold-deep); }
+.ucurve .bar .val {
+  position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+  font-family: var(--display);
+  font-size: 17px;
+  color: var(--navy);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+}
+.ucurve .bar .lab {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.3;
+}
+
+/* Adversity correlations chart */
+.corr-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.corr-row {
+  display: grid;
+  grid-template-columns: 1fr 200px 60px;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--body);
+  font-size: 13px;
+}
+.corr-row .l { color: var(--ink); }
+.corr-row .axis {
+  position: relative;
+  height: 8px;
+  background: var(--cream-deep);
+}
+.corr-row .axis::before {
+  content: ""; position: absolute; top: -3px; bottom: -3px;
+  left: 50%; width: 1px;
+  background: var(--ink-faint);
+}
+.corr-row .axis .fill {
+  position: absolute; top: 0; bottom: 0;
+  background: var(--gold-deep);
+}
+.corr-row .v {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold-deep);
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Regional bars */
+.region-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; padding-right: 8px; }
+.region-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.region-row .st { font-weight: 600; color: var(--navy); }
+.region-row .typ {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--ink);
+}
+.region-row .typ::before {
+  content: ""; width: 9px; height: 9px;
+  background: var(--gold-deep);
+}
+.region-row .num { color: var(--ink-soft); font-size: 10px; }
+
+/* Top/bottom tables */
+.rank-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: 18px;
+}
+.rank-tabs button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.rank-tabs button.active { color: var(--navy); border-bottom-color: var(--gold); }
+
+.rank-table { display: flex; flex-direction: column; }
+.rank-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto;
+  gap: 14px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--body);
+  font-size: 13px;
+}
+.rank-row .rk {
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--gold-deep);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36;
+}
+.rank-row .nm { color: var(--ink); font-weight: 500; }
+.rank-row .nm small { color: var(--ink-faint); font-weight: 400; margin-left: 4px; }
+.rank-row .pop {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+.rank-row .sc {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--navy);
+  font-weight: 500;
+}
+
+/* ============ METHODS / DATA SECTION ============ */
+.methods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 900px) { .methods-grid { grid-template-columns: 1fr; gap: 32px; } }
+.method-card {
+  border-top: 2px solid var(--gold);
+  padding-top: 24px;
+}
+.method-card .num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 400;
+  display: block;
+  margin-bottom: 12px;
+  font-variation-settings: "opsz" 36;
+}
+.method-card h4 {
+  font-family: var(--display);
+  font-size: 22px;
+  color: var(--cream);
+  margin-bottom: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.method-card p {
+  font-size: 14.5px;
+  color: rgba(247,244,238,0.78);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.data-access {
+  margin-top: 80px;
+  padding-top: 60px;
+  border-top: 1px solid rgba(201,162,74,0.3);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+}
+@media (max-width: 760px) { .data-access { grid-template-columns: 1fr; gap: 32px; } }
+.data-access h3 {
+  font-family: var(--display);
+  font-size: 28px;
+  color: var(--cream);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.data-access .eyebrow { color: var(--gold-bright); margin-bottom: 16px; display: flex; }
+.data-access .eyebrow::before { background: var(--gold); }
+.data-links { display: flex; flex-direction: column; gap: 0; }
+.data-link {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 22px 0;
+  border-top: 1px solid rgba(201,162,74,0.2);
+  color: var(--cream);
+  border-bottom: none;
+}
+.data-link:last-child { border-bottom: 1px solid rgba(201,162,74,0.2); }
+.data-link:hover { color: var(--gold-bright); border-top-color: var(--gold); }
+.data-link:hover:last-child { border-bottom-color: var(--gold); }
+.data-link .ic {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--gold);
+  font-variation-settings: "opsz" 36;
+}
+.data-link .ti {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  display: block;
+  margin-bottom: 4px;
+}
+.data-link .de {
+  font-family: var(--body);
+  font-size: 13px;
+  color: rgba(247,244,238,0.65);
+  display: block;
+}
+.data-link .ar {
+  font-family: var(--mono);
+  font-size: 16px;
+}
+
+/* ============ PUBLICATIONS ============ */
+.pub-list { display: flex; flex-direction: column; }
+.pub {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 32px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+.pub:first-child { border-top: 1px solid var(--rule); }
+.pub-year {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--gold-deep);
+  font-weight: 400;
+  font-variation-settings: "opsz" 36;
+}
+.pub-title {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.pub-title em { font-style: italic; }
+.pub-meta {
+  font-family: var(--body);
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.pub-meta em { color: var(--navy); font-style: italic; }
+.pub-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--navy);
+  padding: 8px 14px;
+  color: var(--navy);
+  white-space: nowrap;
+  align-self: center;
+}
+.pub-link:hover { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+@media (max-width: 760px) {
+  .pub { grid-template-columns: 1fr; gap: 8px; }
+  .pub-year { font-size: 22px; }
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--navy-deep);
+  color: rgba(247,244,238,0.7);
+  padding: 80px 0 40px;
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(201,162,74,0.2);
+}
+@media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 32px; } }
+.foot-brand h3 {
+  font-family: var(--display);
+  font-size: 26px;
+  color: var(--cream);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.foot-brand p {
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 50ch;
+  margin: 0;
+}
+.foot-col h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+.foot-col a {
+  display: block;
+  font-size: 13.5px;
+  color: rgba(247,244,238,0.7);
+  border: none;
+  padding: 4px 0;
+}
+.foot-col a:hover { color: var(--gold-bright); }
+.foot-bottom {
+  margin-top: 40px;
+  display: flex; justify-content: space-between; flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(247,244,238,0.4);
+  gap: 16px;
+}
+
+/* Reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#top" class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        Mapping the Modern Agora
+        <span class="brand-sub">SNF Agora Institute · Johns Hopkins</span>
+      </div>
+    </a>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#map">The Map</a>
+      <a href="#stories">Stories</a>
+      <a href="#methods">Methods</a>
+      <a href="#publications">Papers</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">A research project of the SNF Agora Institute at Johns Hopkins University</div>
+    <h1>Mapping the<br>modern <em>agora</em>.</h1>
+    <p class="hero-lede">
+      A democracy is only as strong as its agora. <strong>Mapping the Modern Agora</strong>
+      uses computational social science to chart the landscape of American civic
+      infrastructure — county by county, organization by organization — so that the
+      places where people gather, deliberate, and act together can finally be seen at scale.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="num">1.7M</span>
+        <span class="lab">Nonprofit organizations classified</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="num">3,126</span>
+        <span class="lab">U.S. counties measured</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="num">15</span>
+        <span class="lab">Organizational types identified</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="num">5</span>
+        <span class="lab">Civic opportunity quintiles</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</header>
+
+<!-- ============ ABOUT SECTION ============ -->
+<section id="about" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">The Project</div>
+        <h2>Civic life, made <em>visible</em>.</h2>
+      </div>
+      <p>
+        Most efforts to renew American democracy are hindered by a simple problem: we cannot
+        see the landscape we are trying to repair. This project closes that gap.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-prose">
+        <p class="lede">
+          The agora — the ancient gathering place where Athenians argued, debated, and
+          decided together — has eroded in modern America. Most people now lack
+          opportunities to engage with each other in the processes of power-sharing,
+          deliberation, and contestation that make pluralistic democracy possible.
+        </p>
+        <p>
+          Mapping the Modern Agora applies machine learning and large-scale data analysis to
+          measure civic infrastructure across the United States. Beginning with the IRS
+          registry of every tax-exempt organization in America, we link administrative
+          records to text scraped directly from organization websites, then classify each
+          group by the type of civic opportunity it offers: <em>membership</em>,
+          <em>volunteering</em>, <em>public events</em>, and
+          <em>taking civic or political action</em>.
+        </p>
+        <p>
+          The result is a county-level civic opportunity index — a way of seeing, for the
+          first time, where the modern agora is thriving, where it is thinning, and where
+          it has all but disappeared. Researchers, funders, and organizers can use it to
+          identify communities that need investment and to test ideas for strengthening
+          civic life.
+        </p>
+      </div>
+      <div>
+        <div class="stat-grid" id="hero-stats">
+          <div class="stat">
+            <span class="num">1.7<em>M</em></span>
+            <span class="lab">Nonprofits in the underlying registry</span>
+          </div>
+          <div class="stat">
+            <span class="num" id="stat-civic">450k+</span>
+            <span class="lab">Classified as offering civic opportunity</span>
+          </div>
+          <div class="stat">
+            <span class="num">3,126</span>
+            <span class="lab">Counties scored 1–5 on the index</span>
+          </div>
+          <div class="stat">
+            <span class="num">51</span>
+            <span class="lab">States &amp; D.C. with full coverage</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAP SECTION ============ -->
+<section id="map" class="map-section">
+  <div class="wide">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">The Interactive Map</div>
+        <h2>Every county, <em>scored</em>.</h2>
+      </div>
+      <p>
+        Click any county to see its civic opportunity score, its rank against other
+        counties in its state and the nation, and a breakdown of the types of
+        organizations that make up its civic life. Switch layers to compare the
+        composite index against the most common type of civic organization in each place.
+      </p>
+    </div>
+
+    <div class="map-shell">
+      <div class="map-toolbar">
+        <div class="layer-toggle" role="tablist" aria-label="Map layer">
+          <button data-layer="index" class="active">Civic Opportunity Index</button>
+          <button data-layer="primary">Primary Organization Type</button>
+        </div>
+        <div class="map-hint">Click a county to open details</div>
+      </div>
+
+      <div class="map-canvas-wrap">
+        <svg id="map-svg" viewBox="0 0 975 610" preserveAspectRatio="xMidYMid meet" aria-label="U.S. county map of civic opportunity"></svg>
+        <div class="map-loading" id="map-loading">Loading map data</div>
+        <div class="map-legend" id="map-legend"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORIES SECTION ============ -->
+<section id="stories" class="stories-section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Four Findings</div>
+        <h2>What the data <em>tells us</em>.</h2>
+      </div>
+      <p>
+        Four patterns that emerge once 1.7 million organizations are seen as one map —
+        each one a hypothesis for further inquiry, not a conclusion.
+      </p>
+    </div>
+
+    <article class="story" id="story-1">
+      <div class="story-prose">
+        <span class="chap">01</span>
+        <span class="chap-label">Finding No. 1 · The U-Curve</span>
+        <h3>Civic life is thinnest in the <em>middle</em>.</h3>
+        <p>
+          The intuition is that big cities are where civic organizations cluster. The
+          intuition is half right. Sort America's counties by population into five
+          equal groups, and the civic opportunity score per capita traces a U: highest
+          in the very smallest counties, highest again in the very largest, lowest in
+          the middle.
+        </p>
+        <p>
+          Tiny rural counties get a per-capita boost from their small denominator —
+          a single Grange hall and a Lions Club go a long way when only six thousand
+          people live nearby. Big metros host the dense networks of advocacy groups,
+          unions, and arts organizations that come with scale. The mid-sized counties
+          in between have neither advantage. Civic life is most fragile in the suburbs
+          and small cities where most Americans actually live.
+        </p>
+      </div>
+      <div class="story-viz">
+        <h4 class="viz-title">Civic opportunity score per capita</h4>
+        <p class="viz-sub">Median, by county population quintile</p>
+        <div class="ucurve" id="ucurve"></div>
+      </div>
+    </article>
+
+    <article class="story" id="story-2">
+      <div class="story-prose">
+        <span class="chap">02</span>
+        <span class="chap-label">Finding No. 2 · The Adversity Gap</span>
+        <h3>Where need is greatest, civic infrastructure is <em>thinnest</em>.</h3>
+        <p>
+          Across every measure of disadvantage tracked in the dataset — poverty,
+          unemployment, single-parent households, the broadband gap, adults without a
+          high-school diploma — the relationship with civic opportunity runs in the
+          same direction: <em>down</em>.
+        </p>
+        <p>
+          The strongest signal is education. Counties where more adults lack a high-school
+          diploma have substantially fewer civic opportunities per capita — a correlation
+          of −0.45. The places that arguably need the most civic infrastructure to mediate
+          between residents and institutions tend to have the least of it. This is not a
+          coincidence to dismiss; it is a structural finding to address.
+        </p>
+      </div>
+      <div class="story-viz">
+        <h4 class="viz-title">Correlation with civic opportunity score</h4>
+        <p class="viz-sub">Pearson r across 3,126 counties · negative bars run left</p>
+        <div class="corr-list" id="corr-list"></div>
+      </div>
+    </article>
+
+    <article class="story" id="story-3">
+      <div class="story-prose">
+        <span class="chap">03</span>
+        <span class="chap-label">Finding No. 3 · The Composition</span>
+        <h3>Civic life is held together by <em>fraternities and faiths</em>.</h3>
+        <p>
+          When civic opportunity organizations are sorted into fifteen types — religious,
+          community, professional, political, and so on — two categories swallow most of
+          the country. Just over half of all U.S. counties have <em>Social &amp; Fraternal</em>
+          organizations as their largest civic-opportunity type. Nearly a third are dominated
+          by <em>Religious</em> organizations. Every other category combined accounts for the
+          rest.
+        </p>
+        <p>
+          The pattern varies sharply by state. The South leans Religious; the Plains and
+          New England lean Social &amp; Fraternal; only a handful of states are dominated
+          by anything else. Whatever the modern agora is, in most of America it looks like
+          a Rotary club or a church basement.
+        </p>
+      </div>
+      <div class="story-viz">
+        <h4 class="viz-title">Most common primary type, by state</h4>
+        <p class="viz-sub">Counties whose top civic-opportunity org type matches</p>
+        <div class="region-list" id="region-list"></div>
+      </div>
+    </article>
+
+    <article class="story" id="story-4">
+      <div class="story-prose">
+        <span class="chap">04</span>
+        <span class="chap-label">Finding No. 4 · The Extremes</span>
+        <h3>Where the map runs <em>highest</em>, and lowest.</h3>
+        <p>
+          Below are the ten counties (with at least 10,000 residents) that score highest
+          and lowest on the civic opportunity index. The top of the list is a mix of
+          college towns, cultural hubs, and tight-knit rural communities. The bottom of
+          the list is heavier on counties with histories of disinvestment.
+        </p>
+        <p>
+          These are starting points for reporting and follow-up research, not verdicts.
+          A high score reflects the density of organizations offering civic opportunities;
+          it does not measure how good those opportunities are, who has access to them,
+          or whether they translate into actual democratic participation. Click any county
+          on the map above to dig in.
+        </p>
+      </div>
+      <div class="story-viz">
+        <div class="rank-tabs" role="tablist">
+          <button class="active" data-tab="top">Top 10</button>
+          <button data-tab="bot">Bottom 10</button>
+        </div>
+        <div class="rank-table" id="rank-table"></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ METHODS / DATA ACCESS ============ -->
+<section id="methods" class="dark">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">How It Was Built</div>
+        <h2>Methods &amp; <em>data access</em>.</h2>
+      </div>
+      <p>
+        From a federal registry of nearly two million nonprofits to a per-capita score for
+        every county — a three-step pipeline of administrative data, web scraping, and
+        machine learning.
+      </p>
+    </div>
+
+    <div class="methods-grid">
+      <div class="method-card">
+        <span class="num">i.</span>
+        <h4>Start with the registry</h4>
+        <p>
+          The pipeline begins with the IRS Exempt Organizations Business Master File — a
+          comprehensive registry of every tax-exempt organization in the United States,
+          including the many small groups that never file an annual return.
+        </p>
+      </div>
+      <div class="method-card">
+        <span class="num">ii.</span>
+        <h4>Scrape the websites</h4>
+        <p>
+          Each organization's website is located and scraped. Natural language processing
+          extracts mission statements, program descriptions, and signals of activity,
+          adding rich text where the IRS has only an address.
+        </p>
+      </div>
+      <div class="method-card">
+        <span class="num">iii.</span>
+        <h4>Classify and aggregate</h4>
+        <p>
+          Machine-learned classifiers tag each organization by type and by the civic
+          opportunities it offers. Counts are aggregated to the county level, normalized
+          per 100,000 residents, and binned into a five-point index.
+        </p>
+      </div>
+    </div>
+
+    <div class="data-access">
+      <div>
+        <div class="eyebrow">Get the Data</div>
+        <h3>Open and replicable.</h3>
+      </div>
+      <div class="data-links">
+        <a class="data-link" href="https://github.com/snfagora/american_civic_opportunity_datasets">
+          <span class="ic">i.</span>
+          <div>
+            <span class="ti">GitHub Repository</span>
+            <span class="de">Source code, county and ZIP-level CSVs, validation notebooks</span>
+          </div>
+          <span class="ar">→</span>
+        </a>
+        <a class="data-link" href="https://doi.org/10.7910/DVN/IRCA7C">
+          <span class="ic">ii.</span>
+          <div>
+            <span class="ti">Harvard Dataverse</span>
+            <span class="de">Archived release including the 1.7M-row organization-level dataset</span>
+          </div>
+          <span class="ar">→</span>
+        </a>
+        <a class="data-link" href="https://www.nature.com/articles/s41597-025-05353-6">
+          <span class="ic">iii.</span>
+          <div>
+            <span class="ti">Data Paper · Nature Scientific Data</span>
+            <span class="de">Full documentation of the construction pipeline and validation</span>
+          </div>
+          <span class="ar">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PUBLICATIONS ============ -->
+<section id="publications" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Selected Publications</div>
+        <h2>From the <em>research team</em>.</h2>
+      </div>
+      <p>
+        Three peer-reviewed papers that trace the project from its conceptual roots
+        through its empirical findings to the public release of its underlying datasets.
+      </p>
+    </div>
+
+    <div class="pub-list">
+      <div class="pub">
+        <div class="pub-year">2025</div>
+        <div>
+          <div class="pub-title">MapAgora: Civic Opportunity Datasets for the Study of American Local Politics and Public Policy</div>
+          <div class="pub-meta">Jae Yeon Kim, Milan de Vries, Hahrie Han · <em>Nature Scientific Data</em></div>
+        </div>
+        <a class="pub-link" href="https://www.nature.com/articles/s41597-025-05353-6">Read</a>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2023</div>
+        <div>
+          <div class="pub-title">The Unequal Landscape of Civic Opportunity in America</div>
+          <div class="pub-meta">Milan de Vries, Jae Yeon Kim, Hahrie Han · <em>Nature Human Behaviour</em></div>
+        </div>
+        <a class="pub-link" href="https://www.nature.com/articles/s41562-023-01743-1">Read</a>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2022</div>
+        <div>
+          <div class="pub-title">Civil Society, Realized: Equipping the Mass Public to Express Choice and Negotiate Power</div>
+          <div class="pub-meta">Hahrie Han, Jae Yeon Kim · <em>The ANNALS of the American Academy of Political and Social Science</em></div>
+        </div>
+        <a class="pub-link" href="https://journals.sagepub.com/doi/full/10.1177/00027162221077471">Read</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <h3>Mapping the Modern Agora.</h3>
+        <p>
+          A research project of the SNF Agora Institute at Johns Hopkins University,
+          using computational social science to make American civic infrastructure
+          visible at scale.
+        </p>
+      </div>
+      <div class="foot-col">
+        <h5>Project</h5>
+        <a href="#about">About</a>
+        <a href="#map">Interactive Map</a>
+        <a href="#stories">Findings</a>
+        <a href="#methods">Methods</a>
+      </div>
+      <div class="foot-col">
+        <h5>Affiliations</h5>
+        <a href="https://snfagora.jhu.edu/">SNF Agora Institute</a>
+        <a href="https://www.p3researchlab.org/">P3 Lab</a>
+        <a href="https://www.jhu.edu/">Johns Hopkins University</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© SNF Agora Institute · Johns Hopkins University</div>
+      <div>Data: MapAgora · CC-BY 4.0</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ SIDEBAR (county detail) ============ -->
+<aside class="sidebar" id="sidebar" aria-hidden="true">
+  <div class="sidebar-head">
+    <button class="sidebar-close" id="sb-close" aria-label="Close">×</button>
+    <div class="sb-eyebrow">County Profile</div>
+    <div class="sb-name" id="sb-name">—</div>
+    <div class="sb-state" id="sb-state">—</div>
+  </div>
+  <div class="sidebar-body" id="sb-body">
+    <!-- populated by JS -->
+  </div>
+</aside>
+
+<div class="map-tooltip" id="tooltip"></div>
+
+<!-- ============ DEPENDENCIES ============ -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+
+<!-- ============ APP ============ -->
+<script src="app.js"></script>
+
+</body>
+</html>
