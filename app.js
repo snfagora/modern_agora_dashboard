@@ -150,7 +150,8 @@ function fillForCounty(feature) {
   if (CURRENT_LAYER === 'index') {
     return QUINTILE_COLORS[(c.opp_idx || 1) - 1] || '#e8e2d4';
   } else {
-    return PRIM_PALETTE[c.prim] || '#e8e2d4';
+    const prim = c.prim || (c.types && c.types.length ? c.types[0].c : null);
+    return PRIM_PALETTE[prim] || '#e8e2d4';
   }
 }
 
@@ -172,7 +173,8 @@ function onCountyHover(event, feature, show) {
   if (CURRENT_LAYER === 'index') {
     stat = `${fmt1(c.opp_score)} per 100k · Quintile ${c.opp_idx}`;
   } else {
-    stat = c.prim ? `Primary type: ${c.prim}` : 'No civic orgs';
+    const prim = c.prim || (c.types && c.types.length ? c.types[0].c : null);
+    stat = prim ? `Primary type: ${prim}` : 'No civic orgs';
   }
   tooltip
     .html(`<span class="tt-name">${name} County, ${c.st}</span><span class="tt-stat">${stat}</span>`)
