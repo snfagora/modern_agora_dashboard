@@ -433,6 +433,94 @@ section.dark .section-head p { color: rgba(247,244,238,0.75); }
   box-shadow: 0 0 0 4px rgba(201,162,74,0.2);
 }
 
+/* County search */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.county-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--ink-faint);
+  pointer-events: none;
+  z-index: 1;
+}
+#search-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 8px 12px 8px 32px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  width: 220px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+#search-input::placeholder { color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; }
+#search-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201,162,74,0.15);
+}
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-top: none;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 80;
+  display: none;
+  box-shadow: 0 12px 32px -8px rgba(10,37,64,0.18);
+}
+.search-results.open { display: block; }
+.search-result {
+  padding: 9px 12px 9px 32px;
+  font-family: var(--body);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  border-bottom: 1px solid var(--hairline);
+  transition: background .1s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover, .search-result.active { background: var(--cream); }
+.search-result .sr-state {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+}
+.search-result .sr-name { flex: 1; }
+.search-result .sr-name mark {
+  background: rgba(201,162,74,0.3);
+  color: inherit;
+  padding: 0 1px;
+}
+.search-empty {
+  padding: 14px 12px 14px 32px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+@media (max-width: 760px) {
+  .map-toolbar { flex-direction: column; align-items: stretch; }
+  #search-input { width: 100%; }
+  .map-hint { display: none; }
+}
+
 .map-canvas-wrap {
   position: relative;
   width: 100%;
@@ -1301,6 +1389,12 @@ footer {
         <div class="layer-toggle" role="tablist" aria-label="Map layer">
           <button data-layer="index" class="active">Civic Opportunity Index</button>
           <button data-layer="primary">Primary Organization Type</button>
+        </div>
+        <div class="county-search" id="county-search">
+          <label for="search-input" class="sr-only">Search for a county</label>
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><line x1="15.5" y1="15.5" x2="22" y2="22"/></svg>
+          <input type="text" id="search-input" placeholder="Search counties…" autocomplete="off" spellcheck="false">
+          <div class="search-results" id="search-results"></div>
         </div>
         <div class="map-hint">Click a county to open details</div>
       </div>

@@ -93,6 +93,7 @@ async function boot() {
     drawRegional();
     drawRanking();
     bindUI();
+    initSearch();
 
     document.getElementById('map-loading').classList.add('hidden');
   } catch (err) {
@@ -477,6 +478,163 @@ function bindUI() {
       RANK_TAB = btn.dataset.tab;
       drawRanking();
     });
+  });
+}
+
+// ============================================================
+//  COUNTY SEARCH
+// ============================================================
+let SEARCH_INDEX = []; // [{fips, label, name, state, searchStr}, ...]
+let searchActiveIdx = -1;
+
+function initSearch() {
+  // Build searchable index
+  SEARCH_INDEX = Object.entries(DATA.counties).map(([fips, c]) => {
+    const name = COUNTY_NAMES[fips] || '';
+    const stFull = STATE_NAMES[c.st] || c.st;
+    return {
+      fips,
+      name: name + ' County',
+      state: c.st,
+      stateFull: stFull,
+      label: name + ' County, ' + stFull,
+      searchStr: (name + ' county ' + stFull + ' ' + c.st).toLowerCase()
+    };
+  }).filter(d => d.name !== ' County')  // skip unnamed
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const input = document.getElementById('search-input');
+  const results = document.getElementById('search-results');
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    searchActiveIdx = -1;
+    if (q.length < 2) {
+      results.classList.remove('open');
+      results.innerHTML = '';
+      return;
+    }
+    const matches = findMatches(q, 8);
+    if (matches.length === 0) {
+      results.innerHTML = '<div class="search-empty">No counties found</div>';
+      results.classList.add('open');
+      return;
+    }
+    results.innerHTML = matches.map((m, i) =>
+      `<div class="search-result" data-fips="${m.fips}" data-idx="${i}">
+        <span class="sr-name">${highlightMatch(m.label, q)}</span>
+        <span class="sr-state">${m.state}</span>
+      </div>`
+    ).join('');
+    results.classList.add('open');
+
+    // Click handlers on results
+    results.querySelectorAll('.search-result').forEach(el => {
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault(); // prevent input blur before click fires
+        const fips = el.dataset.fips;
+        selectCounty(fips);
+        input.value = '';
+        results.classList.remove('open');
+        results.innerHTML = '';
+      });
+    });
+  });
+
+  // Keyboard navigation
+  input.addEventListener('keydown', (e) => {
+    const items = results.querySelectorAll('.search-result');
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      searchActiveIdx = Math.min(searchActiveIdx + 1, items.length - 1);
+      updateActiveResult(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      searchActiveIdx = Math.max(searchActiveIdx - 1, 0);
+      updateActiveResult(items);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (searchActiveIdx >= 0 && items[searchActiveIdx]) {
+        const fips = items[searchActiveIdx].dataset.fips;
+        selectCounty(fips);
+        input.value = '';
+        results.classList.remove('open');
+        results.innerHTML = '';
+      }
+    } else if (e.key === 'Escape') {
+      input.value = '';
+      results.classList.remove('open');
+      results.innerHTML = '';
+      input.blur();
+    }
+  });
+
+  // Close on blur
+  input.addEventListener('blur', () => {
+    // Small delay so mousedown on result can fire first
+    setTimeout(() => {
+      results.classList.remove('open');
+    }, 150);
+  });
+
+  // Re-open on focus if there's text
+  input.addEventListener('focus', () => {
+    if (input.value.trim().length >= 2) {
+      input.dispatchEvent(new Event('input'));
+    }
+  });
+}
+
+function findMatches(query, max) {
+  const terms = query.split(/\s+/).filter(t => t.length > 0);
+  const scored = [];
+  for (const item of SEARCH_INDEX) {
+    // All terms must appear somewhere in the search string
+    let allMatch = true;
+    for (const t of terms) {
+      if (!item.searchStr.includes(t)) { allMatch = false; break; }
+    }
+    if (!allMatch) continue;
+
+    // Score: prefer starts-with on county name
+    let score = 0;
+    const nameLower = item.name.toLowerCase();
+    if (nameLower.startsWith(query)) score = 3;
+    else if (nameLower.startsWith(terms[0])) score = 2;
+    else if (item.searchStr.startsWith(terms[0])) score = 1;
+
+    scored.push({ ...item, score });
+    if (scored.length > max * 4) break; // early exit for perf
+  }
+  scored.sort((a, b) => b.score - a.score || a.label.localeCompare(b.label));
+  return scored.slice(0, max);
+}
+
+function highlightMatch(text, query) {
+  // Highlight the first occurrence of each query term
+  const terms = query.split(/\s+/).filter(t => t.length > 0);
+  let html = escapeHtml(text);
+  for (const t of terms) {
+    const regex = new RegExp('(' + escapeRegex(t) + ')', 'i');
+    html = html.replace(regex, '<mark>$1</mark>');
+  }
+  return html;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function updateActiveResult(items) {
+  items.forEach((el, i) => {
+    el.classList.toggle('active', i === searchActiveIdx);
+    if (i === searchActiveIdx) el.scrollIntoView({ block: 'nearest' });
   });
 }
 
