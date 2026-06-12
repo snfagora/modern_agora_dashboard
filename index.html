@@ -893,6 +893,15 @@ section.dark .section-head p { color: rgba(240,245,245,0.75); }
   font-variation-settings: "opsz" 14;
 }
 
+/* Story image */
+.story-viz--img { padding: 28px 28px; }
+.story-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--hairline);
+}
+
 /* U-curve chart */
 .ucurve { display: flex; align-items: flex-end; gap: 12px; height: 240px; padding-top: 20px; }
 .ucurve .bar {
@@ -1425,28 +1434,25 @@ footer {
     <article class="story" id="story-1">
       <div class="story-prose">
         <span class="chap">01</span>
-        <span class="chap-label">Finding No. 1 · The U-Curve</span>
-        <h3>Civic life is thinnest in the <em>middle</em>.</h3>
+        <span class="chap-label">Finding No. 1 · The Unequal Distribution</span>
+        <h3>The distribution of civic opportunity in America is <em>unequal</em>.</h3>
         <p>
-          The intuition is that big cities are where civic organizations cluster. The
-          intuition is half right. Sort America's counties by population into five
-          equal groups, and the civic opportunity score per capita traces a U: highest
-          in the very smallest counties, highest again in the very largest, lowest in
-          the middle.
+          The map of civic opportunity shown here reveals an unequal landscape. For
+          instance, every county in states like Connecticut fall into the top two
+          quintiles of civic opportunity (4 or 5). By contrast, over 86% of counties
+          in Mississippi fall into the bottom two quintiles (1 or 2).
         </p>
         <p>
-          Tiny rural counties get a per-capita boost from their small denominator —
-          a single Grange hall and a Lions Club go a long way when only six thousand
-          people live nearby. Big metros host the dense networks of advocacy groups,
-          unions, and arts organizations that come with scale. The mid-sized counties
-          in between have neither advantage. Civic life is most fragile in the suburbs
-          and small cities where most Americans actually live.
+          When we zoom in — here on the right we've focused on Los Angeles County,
+          for instance, and calculated the civic opportunity index by zip code — we
+          see that these disparities exist not only at the county level, but also at
+          more localized levels.
         </p>
       </div>
-      <div class="story-viz">
-        <h4 class="viz-title">Civic opportunity score per capita</h4>
-        <p class="viz-sub">Median, by county population quintile</p>
-        <div class="ucurve" id="ucurve"></div>
+      <div class="story-viz story-viz--img">
+        <h4 class="viz-title">Civic opportunity index by zip code</h4>
+        <p class="viz-sub">Los Angeles County, California</p>
+        <img src="civic_opportunity_los_angeles_county.png" alt="Map of civic opportunity index by zip code in Los Angeles County, showing wide variation from quintile 1 to 5 across neighborhoods" class="story-img">
       </div>
     </article>
 
