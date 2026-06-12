@@ -4,7 +4,7 @@
    ============================================================ */
 
 // ----- color scales -----
-const QUINTILE_COLORS = ['#f0e7d3', '#e3c98a', '#d2a44c', '#a87520', '#5a3a08'];
+const QUINTILE_COLORS = ['#e0eced', '#8fbec8', '#3d95a2', '#1a6a78', '#0E3D4A'];
 const QUINTILE_LABELS = ['Lowest', 'Low', 'Mid', 'High', 'Highest'];
 
 // Categorical scheme for primary org type
@@ -14,21 +14,21 @@ const PRIM_TYPES = [
   'Political', 'Unions', 'Foundations', 'Research & Think Tank', 'Housing'
 ];
 const PRIM_PALETTE = {
-  'Social & Fraternal': '#0a2540',
-  'Religious':          '#c9a24a',
-  'Youth':              '#7a8da3',
-  'Hobby & Sports':     '#a87520',
-  'Healthcare':         '#4a6b8a',
-  'Community':          '#8a6b1f',
-  'Education':          '#3d5a7a',
-  'Economic':           '#d2a44c',
-  'Arts & Cultural':    '#5a3a08',
-  'Professional':       '#1a3a5f',
-  'Political':          '#e3c98a',
-  'Unions':             '#2c4a6a',
-  'Foundations':        '#b58500',
-  'Research & Think Tank': '#6b7d92',
-  'Housing':            '#465a72'
+  'Social & Fraternal': '#0E3D4A',
+  'Religious':          '#DCDF72',
+  'Youth':              '#668A92',
+  'Hobby & Sports':     '#00AB8E',
+  'Healthcare':         '#1a6a78',
+  'Community':          '#8fbec8',
+  'Education':          '#141F2C',
+  'Economic':           '#b5b84a',
+  'Arts & Cultural':    '#3d95a2',
+  'Professional':       '#2d5a64',
+  'Political':          '#c5c95a',
+  'Unions':             '#4a7a82',
+  'Foundations':        '#a8ab50',
+  'Research & Think Tank': '#7a9da5',
+  'Housing':            '#3a5058'
 };
 
 // Pretty state names for sidebar
@@ -147,12 +147,12 @@ function getFips(feature) {
 function fillForCounty(feature) {
   const fips = getFips(feature);
   const c = DATA.counties[fips];
-  if (!c) return '#e8e2d4'; // grey for missing
+  if (!c) return '#dde5e7'; // grey for missing
   if (CURRENT_LAYER === 'index') {
-    return QUINTILE_COLORS[(c.opp_idx || 1) - 1] || '#e8e2d4';
+    return QUINTILE_COLORS[(c.opp_idx || 1) - 1] || '#dde5e7';
   } else {
     const prim = c.prim || (c.types && c.types.length ? c.types[0].c : null);
-    return PRIM_PALETTE[prim] || '#e8e2d4';
+    return PRIM_PALETTE[prim] || '#dde5e7';
   }
 }
 
