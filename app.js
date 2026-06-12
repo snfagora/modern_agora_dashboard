@@ -329,9 +329,10 @@ function closeSidebar() {
 //  STORY 1 — U-curve bar chart
 // ============================================================
 function drawUCurve() {
+  const wrap = document.getElementById('ucurve');
+  if (!wrap) return; // story 1 may use an image instead
   const data = DATA.stories.ucurve;
   const max = d3.max(data, d => d.median);
-  const wrap = document.getElementById('ucurve');
   wrap.innerHTML = data.map(d => {
     const h = (d.median / max * 92);
     return `
