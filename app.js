@@ -356,9 +356,10 @@ function formatPopRange(min, max) {
 //  STORY 2 — Adversity correlations
 // ============================================================
 function drawCorrelations() {
+  const wrap = document.getElementById('corr-list');
+  if (!wrap) return;
   const data = DATA.stories.adversity;
   const maxAbs = d3.max(data, d => Math.abs(d.r));
-  const wrap = document.getElementById('corr-list');
   wrap.innerHTML = data.map(d => {
     // axis: 0 in middle, fill from middle
     const widthPct = (Math.abs(d.r) / 0.6 * 50);
@@ -379,6 +380,8 @@ function drawCorrelations() {
 //  STORY 3 — Regional / state primary type
 // ============================================================
 function drawRegional() {
+  const wrap = document.getElementById('region-list');
+  if (!wrap) return;
   const data = DATA.stories.state_primary;
   const rows = Object.entries(data)
     .map(([state, info]) => ({state, ...info}))
@@ -391,7 +394,6 @@ function drawRegional() {
       }
       return b.n - a.n;
     });
-  const wrap = document.getElementById('region-list');
   wrap.innerHTML = rows.map(r => `
     <div class="region-row">
       <span class="st">${r.state}</span>
@@ -420,8 +422,9 @@ document.head.appendChild(styleEl);
 // ============================================================
 let RANK_TAB = 'top';
 function drawRanking() {
-  const data = RANK_TAB === 'top' ? DATA.stories.top10 : DATA.stories.bot10;
   const wrap = document.getElementById('rank-table');
+  if (!wrap) return;
+  const data = RANK_TAB === 'top' ? DATA.stories.top10 : DATA.stories.bot10;
   wrap.innerHTML = data.map((r, i) => {
     const name = COUNTY_NAMES[r.fips] || `FIPS ${r.fips}`;
     return `
